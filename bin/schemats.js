@@ -33,6 +33,10 @@ let argv = yargs
     .nargs('o', 1)
     .alias('o', 'output')
     .describe('o', 'output file name')
+    .alias('s', 'schema')
+    .nargs('s', 1)
+    .describe('s', 'schema name')
+    .default('s', 'public')
     .help('h')
     .alias('h', 'help')
     .argv;
@@ -42,7 +46,7 @@ let argv = yargs
         if (!Array.isArray(argv.t)) {
             argv.t = [argv.t];
         }
-        let formattedOutput = yield index_1.typescriptOfSchema(db, argv.n, argv.t, index_1.extractCommand(process.argv, argv.c), index_1.getTime());
+        let formattedOutput = yield index_1.typescriptOfSchema(db, argv.n, argv.s, argv.t, index_1.extractCommand(process.argv, argv.c), index_1.getTime());
         yield fsAsync.writeFileAsync(argv.o, formattedOutput.dest);
     }
     catch (e) {

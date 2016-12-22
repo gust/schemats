@@ -13,10 +13,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 const typescript_1 = require("./typescript");
 const typescript_formatter_1 = require("typescript-formatter");
-function typescriptOfTable(db, table) {
+function typescriptOfTable(db, table, schema) {
     return __awaiter(this, void 0, void 0, function* () {
         let interfaces = '';
-        let tableTypes = yield db.getTableTypes(table);
+        let tableTypes = yield db.getTableTypes(table, schema);
         interfaces += typescript_1.generateSchemaTypes(table, tableTypes);
         interfaces += typescript_1.generateTableInterface(table, tableTypes);
         return interfaces;
@@ -42,11 +42,11 @@ function getTime() {
     return `${yyyy}-${MM}-${dd} ${hh}:${mm}:${ss}`;
 }
 exports.getTime = getTime;
-function typescriptOfSchema(db, namespace, tables, commandRan, time) {
+function typescriptOfSchema(db, namespace, schema, tables, commandRan, time) {
     return __awaiter(this, void 0, void 0, function* () {
         let interfaces = '';
         for (let i = 0; i < tables.length; i++) {
-            interfaces += yield typescriptOfTable(db, tables[i]);
+            interfaces += yield typescriptOfTable(db, tables[i], schema);
         }
         let output = `
             /**

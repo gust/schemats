@@ -17,6 +17,16 @@ function generateTableInterface(tableName, schema) {
     `;
 }
 exports.generateTableInterface = generateTableInterface;
+function generateEnumType(enumObject) {
+    let enumString = '';
+    for (let enumName in enumObject) {
+        enumString += `export type ${enumName} = `;
+        enumString += enumObject[enumName].map(v => `"${v}"`).join(' | ');
+        enumString += `;`;
+    }
+    return enumString;
+}
+exports.generateEnumType = generateEnumType;
 function generateSchemaTypes(tableName, schema) {
     let fields = '';
     for (let columnName in schema) {
