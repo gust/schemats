@@ -33,7 +33,7 @@ export class Database {
     public async getDBSchema(tableName: string) {
         let schema = {}
         await this.db.each(
-            `SELECT column_name, udt_name 
+            `SELECT column_name, udt_name
              FROM information_schema.columns
              WHERE table_name = $1`,
             tableName, schemaItem => {
@@ -51,22 +51,33 @@ export class Database {
             switch (udtName) {
                 case 'varchar':
                 case 'text':
+                case 'uuid':
+                case 'inet':
                     return 'string'
                 case 'int2':
                 case 'int4':
                 case 'int8':
                 case 'float8':
+                case 'numeric':
                     return 'number'
                 case 'bool':
                     return 'boolean'
                 case 'json':
+                case 'jsonb':
                     return 'Object'
                 case 'date':
                 case 'timestamp':
+                case 'timestamptz':
                     return 'Date'
+                case '_int2':
+                case '_int4':
+                case '_int8':
                 case '_float8':
+                case '_numeric':
                     return 'Array<number>'
+                case '_varchar':
                 case '_text':
+                case '_uuid':
                     return 'Array<string>'
                 default:
                     throw new TypeError(`do not know how to convert type [${udtName}]`)
