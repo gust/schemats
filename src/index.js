@@ -23,6 +23,15 @@ function typescriptOfTable(db, table, schema) {
     });
 }
 exports.typescriptOfTable = typescriptOfTable;
+function typescriptOfEnums(db, schema) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let interfaces = '';
+        let enumTypes = yield db.getEnumTypes(schema);
+        interfaces += typescript_1.generateEnumType(enumTypes);
+        return interfaces;
+    });
+}
+exports.typescriptOfEnums = typescriptOfEnums;
 function extractCommand(args, dbConfig) {
     return args
         .slice(2)
@@ -44,7 +53,7 @@ function getTime() {
 exports.getTime = getTime;
 function typescriptOfSchema(db, namespace, schema, tables, commandRan, time) {
     return __awaiter(this, void 0, void 0, function* () {
-        let interfaces = '';
+        let interfaces = yield typescriptOfEnums(db, schema);
         for (let i = 0; i < tables.length; i++) {
             interfaces += yield typescriptOfTable(db, tables[i], schema);
         }
