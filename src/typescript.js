@@ -22,7 +22,7 @@ function generateEnumType(enumObject) {
     for (let enumName in enumObject) {
         enumString += `export type ${enumName} = `;
         enumString += enumObject[enumName].map(v => `"${v}"`).join(' | ');
-        enumString += `;`;
+        enumString += `;\n`;
     }
     return enumString;
 }

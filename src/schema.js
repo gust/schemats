@@ -17,17 +17,16 @@ class Database {
     getEnumTypes(schema) {
         return __awaiter(this, void 0, void 0, function* () {
             let enums = {};
-            yield this.db.each(`select n.nspname as schema,
-                 t.typname as name,
-                 e.enumlabel as value
-             from pg_type t
-             join pg_enum e on t.oid = e.enumtypid
-             join pg_catalog.pg_namespace n ON n.oid = t.typnamespace
-             where enum_schema = '$1'`, schema, enumItem => {
-                if (!enums[enumItem.name]) {
-                    enums[enumItem.name] = [];
+            yield this.db.each(`SELECT t.typname, e.enumlabel
+                FROM pg_enum e
+                JOIN pg_type t ON e.enumtypid = t.oid
+                WHERE typcategory='E' AND
+                t.typnamespace =
+                    (SELECT oid FROM pg_namespace WHERE nspname = $1);`, schema, enumItem => {
+                if (!enums[enumItem.typname]) {
+                    enums[enumItem.typname] = [];
                 }
-                enums[enumItem.name].append(enumItem.value);
+                enums[enumItem.typname].push(enumItem.enumlabel);
             });
             return enums;
         });
