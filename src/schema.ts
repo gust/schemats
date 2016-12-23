@@ -49,6 +49,7 @@ export class Database {
             switch (udtName) {
                 case 'varchar':
                 case 'text':
+                case 'bpchar':
                     return { category: 'base type', type: 'string' }
                 case 'int2':
                 case 'int4':
