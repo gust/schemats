@@ -2,13 +2,13 @@
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator.throw(value)); } catch (e) { reject(e); } }
         function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments)).next());
     });
 };
-const PgPromise = require("pg-promise");
-const lodash_1 = require("lodash");
+const PgPromise = require('pg-promise');
+const lodash_1 = require('lodash');
 const pgp = PgPromise();
 class Database {
     constructor(connectionString) {
@@ -54,34 +54,35 @@ class Database {
                 case 'text':
                 case 'uuid':
                 case 'inet':
-                    return 'string';
+                case 'bpchar':
+                    return { category: 'base type', type: 'string' };
                 case 'int2':
                 case 'int4':
                 case 'int8':
                 case 'float8':
                 case 'numeric':
-                    return 'number';
+                    return { category: 'base type', type: 'number' };
                 case 'bool':
-                    return 'boolean';
+                    return { category: 'base type', type: 'boolean' };
                 case 'json':
                 case 'jsonb':
-                    return 'Object';
+                    return { category: 'base type', type: 'Object' };
                 case 'date':
                 case 'timestamp':
                 case 'timestamptz':
-                    return 'Date';
+                    return { category: 'base type', type: 'Date' };
                 case '_int2':
                 case '_int4':
                 case '_int8':
                 case '_float8':
                 case '_numeric':
-                    return 'Array<number>';
+                    return { category: 'base type', type: 'Array<number>' };
                 case '_varchar':
                 case '_text':
                 case '_uuid':
-                    return 'Array<string>';
+                    return { category: 'base type', type: 'Array<string>' };
                 default:
-                    return udtName;
+                    return { category: 'custom type', type: udtName };
             }
         });
     }
